@@ -1,0 +1,36 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+      {
+        "name": "Gatsby develop",
+        "type": "pwa-node",
+        "request": "launch",
+        "program": "${workspaceRoot}/node_modules/.bin/gatsby",
+        "windows": {
+          "program": "${workspaceRoot}/node_modules/gatsby/dist/bin/gatsby"
+        },
+        "args": ["develop"],
+        "runtimeArgs": ["--nolazy"],
+        "console": "integratedTerminal"
+      },
+      {
+        "name": "Gatsby build",
+        "type": "pwa-node",
+        "request": "launch",
+        "program": "${workspaceRoot}/node_modules/.bin/gatsby",
+        "windows": {
+          "program": "${workspaceRoot}/node_modules/gatsby/dist/bin/gatsby"
+        },
+        "args": ["build"],
+        "runtimeArgs": ["--nolazy"],
+        "console": "integratedTerminal"
+      },
+      {
+          "type": "chrome",
+          "request": "launch",
+          "name": "Launch Chrome",
+          "url":"http://localhost:8000",
+          "webRoot": "${workspaceFolder}"
+      }
+    ]
+  }
