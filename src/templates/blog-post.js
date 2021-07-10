@@ -14,6 +14,7 @@ const BlogPostTemplate = ({ data, location }) => {
 
   return (
     <Layout location={location} title={siteTitle}>
+      { /* eslint-disable-next-line react/jsx-pascal-case */ }
       <SEO
         title={post.frontmatter.title}
         description={post.frontmatter.description || post.excerpt}

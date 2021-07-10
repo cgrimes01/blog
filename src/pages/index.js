@@ -12,6 +12,7 @@ const BlogIndex = ({ data, location }) => {
   if (posts.length === 0) {
     return (
       <Layout location={location} title={siteTitle}>
+        { /* eslint-disable-next-line react/jsx-pascal-case */ }
         <SEO title="All posts" />
         <Bio />
         <p>
@@ -25,6 +26,7 @@ const BlogIndex = ({ data, location }) => {
 
   return (
     <Layout location={location} title={siteTitle}>
+      { /* eslint-disable-next-line react/jsx-pascal-case */ }
       <SEO title="All posts" />
       <Bio />
       <ol style={{ listStyle: `none` }}>
