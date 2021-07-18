@@ -4,21 +4,16 @@ date: "2021-06-10"
 description: "A look at potential issues when adding up decimals in JS"
 ---
 
-I came across a bug recently for a simple table of inputs. A user is able to add a series of numbers, up to 2 decimal places, and then when a save button is clicked the total of the number is validated to make sure that it is between 0 and 100. The particular issue that this user had is that from their perspective they had entered a series of decimals that added up to exactly 100 but the form was stopping them from saving, giving the error message that the total was over 100.
+I came across a bug recently for a simple table of inputs. A user is able to add a series of numbers, up to 2 decimal places, and then when a save button is clicked the total is validated to make sure that it is between 0 and 100. The issue that the user had is that from their perspective they had entered a series of decimals that added up to exactly 100 but the form was stopping them from saving, giving the error message that the total was over 100.
 
-If you have been working with JS for a while then it is quite likely that you have come across this problem, or a similar one, at some point. The most common form that a lot of people first come across this issue is:
-
-```javascript
-0.1 + 0.2 // 0.30000000000000004
-```
-
-But in this case the problem looks more like:
+If you have been working with JS for a while then it is quite likely that you have come across this issue, or a similar one. The problem in this instance is that from a decimals perspective I am adding up numbers that equal exactly 100 but when compared to 100 JS is telling me that the number is greater than 100.
 
 ```javascript
-11.1 + 33.17 + 11.3 + 11.32 + 33.11 // 100.00000000000001
+const total = 11.1 + 33.17 + 11.3 + 11.32 + 33.11 // 100.00000000000001
+total <= 100 // false
 ```
 
-I have reproduced this issue in the a [codesandbox](https://codesandbox.io/s/floating-points-maths-v89rv?file=/src/index.js) so that the numbers can be played around with a bit more.
+The problem is that actually the number that JS has for its total is not exactly 100 as we would expect. I have reproduced this issue in a [codesandbox](https://codesandbox.io/s/floating-points-maths-v89rv?file=/src/index.js) so that the numbers can be played around with a bit more.
 
 ## What's happening?
 
@@ -35,13 +30,13 @@ When working with decimals though - as soon as you start doing any sort of arith
 
 ## What to do?
 
-The most important thing is to simply be aware of this potential issue when working with JS. The majority of the time you'll probably find it will not be a problem for you.
+The most important thing is to simply be aware of this potential issue. The majority of the time you'll probably find it will not be a problem for you.
 
-By far the most common areas that I have seen this come up is when working with currencies or percentages (the particular example at the start of this post was a table of percentages), but there are other instances when performing arithmetic on decimals is important.
+By far the most common areas that I have seen this come up is when working with currencies or percentages (the particular example at the start of this post was a table of percentages), but there will be many other examples when performing arithmetic on decimals needs to be precise.
 
 ### Work only with integers
 
-In a lot of cases the best solution is to make it so that we are working with integers only as opposed to decimals. As mentioned earlier, integer arithmetic will be precise as long as you don't exceed the min or max values.
+My recommendation is to always make it so that we are working with integers only as opposed to decimals. As mentioned earlier, integer arithmetic will be precise as long as you don't exceed the min or max values.
 
 This approach does rely on us knowing the number of decimal places required in advance though.
 
@@ -52,7 +47,7 @@ So going back to the numbers used earlier:
 (1110 + 3317 + 1130 + 1132 + 3311) / 100 // 100
 ```
 
-As you can see, in this instance we know there can only be 2 decimal places so we can multiply each number by 100 to give make sure we always have integers, and then divide by 100 at the end to give us the result we are after. How you want to go about performing these conversions will depend on the codebase you are working with - you could do it case by case or create some reusable helper functions.
+As you can see, in this instance we know there can only be 2 decimal places so we multiply each number by 100 to give make sure we always have integers, and then divide by 100 at the end to give us the result we are after. How you want to go about performing these conversions will depend on the codebase you are working with - you could do it case by case or create some reusable helper functions.
 
 You can see an [integer only sandbox](https://codesandbox.io/s/wind-tuna-agt5ffsfs-40bw6?file=/src/index.js) that takes this approach. The only difference between the original solution, where we get the floating point issue, and the the integer only solution is the total line:
 
@@ -82,16 +77,16 @@ const total = 11.10 + 33.17 + 11.30 + 11.32 + 33.11
 total.toFixed(2); // "100.00"
 ```
 
-However, it is very easy to end up with unexpected results using toFixed. For example, we would expect 0.14 + 0.21 + 0.30 to equal 0.65 and, if we wanted one decimal place, to round up to 0.7. If you do this in JS though, you end up with 0.6:
+However, it is very easy to end up with unexpected results using toFixed. For example, we would expect 0.14 + 0.21 + 0.30 to equal 0.65 and, if we wanted one decimal place, to round to 0.7. If you do this in JS though, you end up with 0.6:
 
 ```javascript
 const total = 0.14 + 0.21 + 0.30 // 0.6499999999999999
 total.toFixed(1); // "0.6"
 ```
 
-This goes back to the inability of the JS floating point format to precisely store some numbers that are easy to precisely represent in decimal format.
+This goes back to the inability of the JS floating point format to precisely store some numbers that are easy to precisely represent in decimal format. So effectively we are actually rounding 0.6499999999999999 to 1 decimal place and so get 0.6.
 
-You see toFixed given as an answer to simple rounding questions in JS but you get this problem and the solution, again, is to make sure you are only working with integers and round by shifting your result by the number of decimal places you want to round to. You can see this below where we multiple the number by 100 as we want to round to 2 decimal places. This gives us the answer we might have expected from toFixed:
+You see toFixed given as an answer to simple rounding questions in JS but you get this problem and the solution, again, is to make sure you are only working with integers and round by shifting your result by the number of decimal places you want to round to. You can see this below where we multiply the number by 100 as we want to round to 2 decimal places. This gives us the answer we might have expected from toFixed earlier:
 
 ```javascript
 const input = 0.365;
@@ -107,7 +102,7 @@ const fixed = input.toFixed(2); // "0.36"
 fixed + 0.21; // "0.360.21"
 ```
 
-It's easy to fix, using parseFloat, but your code starts to bloat and can get confusing.
+It's easy to fix, using parseFloat, but it is another thing to miss and makes your code harder to read.
 
 Finally, every time you convert between types there is a performance cost - probably unnoticeable in most cases but it is still there. It's usually much faster to keep working with just Numbers if possible.
 
