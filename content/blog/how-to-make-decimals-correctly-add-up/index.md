@@ -1,5 +1,5 @@
 ---
-title: JS - Why don't my decimals add up?
+title: JS - How to make decimals correctly add up
 date: "2021-06-10"
 description: "A look at potential issues when adding up decimals in JS, and how to avoid this problem"
 ---
