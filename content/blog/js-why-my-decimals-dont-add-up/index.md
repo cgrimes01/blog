@@ -1,7 +1,7 @@
 ---
 title: JS - Why don't my decimals add up?
 date: "2021-06-10"
-description: "A look at potential issues when adding up decimals in JS"
+description: "A look at potential issues when adding up decimals in JS, and how to avoid this problem"
 ---
 
 I came across a bug recently for a simple table of inputs. A user is able to add a series of numbers, up to 2 decimal places, and then when a save button is clicked the total is validated to make sure that it is between 0 and 100. The issue that the user had is that from their perspective they had entered a series of decimals that added up to exactly 100 but the form was stopping them from saving, giving the error message that the total was over 100.
