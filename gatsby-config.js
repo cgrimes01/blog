@@ -50,7 +50,8 @@ module.exports = {
             options: {
               strict: `ignore`
             }
-          }
+          },
+          `gatsby-remark-autolink-headers`,
         ],
       },
     },
