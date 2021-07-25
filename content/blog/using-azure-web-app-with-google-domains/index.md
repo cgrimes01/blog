@@ -1,6 +1,6 @@
 ---
 title: Using an Azure static web app with a Google domain
-date: "2021-07-23"
+date: "2021-07-25"
 description: "A walkthrough of how to use your Google domain for your Azure static web app"
 ---
 
@@ -23,11 +23,11 @@ We need to use a CNAME record here to map www.cgrimes.dev to the Azure Static We
 1. Go to your static web app in Azure
 2. Go the Custom domains option under Settings
 3. You should at this stage just see the auto-generated Azure given domain
-4. Click Add and then enter your domain name, so in my case www.cgrimes.dev
+4. Click Add and then enter your domain name with the subdomain www, so in my case www.cgrimes.dev
 5. Click Next and you should be on the Validate + Configure window
 6. At this stage we essentially need to prove to Azure that we own the domain we are trying to use
 7. Double check the Domain name on this page and make sure the Hostname record type is set to CNAME
-8. At this stage it is now showing you what you need to add at Google Domains
+8. At this stage it is now showing the CNAME details that you need to add at Google Domains
 9. Copy to your clipboard the Value that is shown for the CNAME record - the auto-generated domain for your app
 
 ### Google Domains
@@ -38,6 +38,7 @@ We need to use a CNAME record here to map www.cgrimes.dev to the Azure Static We
 4. Click Create new record and then enter the following
 - Host name = www
 - Type = CNAME
+- TTL = Leave at default of 3600
 - Data = This should be the auto-generated domain name for your app, it should still be on your clipboard
 5. Save this change
 
@@ -53,3 +54,48 @@ We need to use a CNAME record here to map www.cgrimes.dev to the Azure Static We
 ![Azure static app subdomain ready](./subdomainready.png)
 
 At this stage you should be able to go to your www subdomain (www.cgrimes.dev) and it will resolve to your Azure Static Web App.
+
+## Configure root domain
+
+### Azure Static Web App
+
+1. Go back to the Custom Domain section for your Azure Static Web App
+2. Click Add and then enter your domain name, so in my case cgrimes.dev
+3. Click Next and you should be on the Validate + Configure window
+4. Double check the Domain name on this page and make sure the Hostname record type is set to TXT
+5. Under the Value column there should be Generate Code button that you need to click
+6. Once it has been generated click the copy icon
+7. The status should now show up as Validating...
+
+### Google Domains
+
+1. Go back to the DNS options for your site in Google Domains
+2. Go back to the Manage custom records section and click Create new record again
+3. Enter the following information
+- Host name = [Leave empty]
+- Type = TXT
+- TTL = Leave at default of 3600
+- Data = Paste in the value you just copied from Azure
+4. Save this change
+
+### Azure Static Web App
+
+You don't actually need to do anything here. As with the subdomain though we are waiting for the process to complete and this might take a while but eventually the Custom domain you have just entered will change from Validating to Ready.
+
+## Setup domain forwarding
+
+This is the part where we need to deviate from the docs. The docs ask us to setup an ALIAS record in our DNS so that our root domain (cgrimes.dev) is pointed to the auto-generated domain for out static web app. Google Domains does not support ALIAS records and you can't add CNAME records for the root domain - which is the alternative mentioned in their docs.
+
+So what we can do instead is to setup domain forwarding so that cgrimes.dev is always forwarded to www.cgrimes.dev. This is something that people often do anyway when choosing what their default domain is - www vs non-www. In this instance we are going with www as our default and we can set it up so that the paths and SSL are retained. This should lead to a seamless experience and also not negatively impact SEO.
+
+### Google Domains
+
+1. Go back to the DNS options for your site in Google Domains
+2. Expand the Domain forward section and select Manage
+3. Enter the following information
+- Forward to = www.cgrimes.dev
+- From = cgrimes.dev
+- Redirect type = Permanent redirect (301)
+- Path forwarding = forward path
+- SSL = On
+4. Save these changes
