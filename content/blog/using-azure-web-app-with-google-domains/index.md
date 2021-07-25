@@ -4,15 +4,19 @@ date: "2021-07-25"
 description: "A walkthrough of how to use your Google domain for your Azure static web app"
 ---
 
-When you first create an [Azure Static Web App](https://azure.microsoft.com/en-gb/services/app-service/static/) you get a randomly generated domain - this is the URL for your site and is the domain you will see in the Overview page for your application when viewed in Azure. This is great for playing around with ideas and, as far as I'm aware, you can't delete this - your application will always have this underlying URL. Unless you are planning on leaving your application as a test site it is quite likely that you will want to add your own, more comprehensible domain(s) at some point. The good news is that even the Free tier for Azure Static Web Apps includes 2 custom domains, and you can get 5 with the Standard pricing tier - with both including SSL certificates for free.
+When you first create an [Azure Static Web App](https://azure.microsoft.com/en-gb/services/app-service/static/) you get a randomly generated domain - this is the URL for your site and is the domain you will see in the Overview page for your application when viewed in Azure. Unless you are planning on leaving your application as a test site it is quite likely that you will want to add your own domain(s) at some point. The good news is that even the Free tier for Azure Static Web Apps includes 2 custom domains, and you can get 5 with the Standard pricing tier - with both including SSL certificates for free.
 
 You can purchase a domain through Azure App Service Domains or you can use a domain from another registrar. Azure App Service Domains work really well with Azure Static Web Apps but at this time you are limited to .com, .net, .org, .nl, .in, .biz, .org.uk and .co.in - so you will need to go elsewhere if you want a domain other than these. Luckily it is fairly easy to setup custom domains from any registrar.
 
-I had a [Google Domains](https://domains.google/) domain that I wanted to use with my Azure Static Web App so started setting things up. The documentation for setting up a custom domain in Azure is really good - [Set up a custom domain with free certificate in Azure Static Web Apps](https://docs.microsoft.com/en-us/azure/static-web-apps/custom-domain?tabs=azure-dns), the only problem is that Google domains does not let you create an ALIAS record and so you can't actually follow the instructions exactly.
+I had a [Google Domains](https://domains.google/) domain that I wanted to use with my Azure Static Web App so started setting things up. The documentation for setting up a custom domain in Azure is good - [Set up a custom domain with free certificate in Azure Static Web Apps](https://docs.microsoft.com/en-us/azure/static-web-apps/custom-domain?tabs=azure-dns), the only problem is that Google Domains does not let you create an ALIAS record and so you can't actually follow the instructions exactly.
 
-I would recommend following the Azure docs until you hit the the ALIAS part but am going to document all the steps I went through below as well. This is going to assume that the domain isn't in use and all we want to do is set up the www subdomain and the root. So for this site that would involve setting up www.cgrimes.dev and cgrimes.dev.
+I would recommend following the [Azure docs](https://docs.microsoft.com/en-us/azure/static-web-apps/custom-domain?tabs=azure-dns) until you hit the the ALIAS part. If you have done this then you can skip steps 1 and 2 below and go straight to setting up domain forwarding. I have documented all the steps so that I have them in one place so everything is shown below. This is going to assume that the domain isn't in use and all we want to do is set up the www subdomain and the root. So for this site that would involve setting up www.cgrimes.dev and cgrimes.dev. There are broadly 3 steps you need to go through to get everything working.
 
-## Add www subdomain
+1. [Setup your www subdomain](#setup-your-www-subdomain)
+2. [Configure your root domain](#configure-root-domain)
+3. [Setup domain forwarding](#setup-domain-forwarding)
+
+## Setup your www subdomain
 
 The first thing we want to do is to setup the www subdomain. I'm going to use www.cgrimes.dev as the example here.
 
@@ -36,10 +40,10 @@ We need to use a CNAME record here to map www.cgrimes.dev to the Azure Static We
 2. Go to DNS in the left hand option
 3. Expand the Custom records section and click Manage custom records
 4. Click Create new record and then enter the following
-- Host name = www
-- Type = CNAME
-- TTL = Leave at default of 3600
-- Data = This should be the auto-generated domain name for your app, it should still be on your clipboard
+    * Host name = www
+    * Type = CNAME
+    * TTL = Leave at default of 3600
+    * Data = This should be the auto-generated domain name for your app, it should still be on your clipboard
 5. Save this change
 
 ![Google Domains subdomain](./wwwsubdomainexample.png)
@@ -72,10 +76,10 @@ At this stage you should be able to go to your www subdomain (www.cgrimes.dev) a
 1. Go back to the DNS options for your site in Google Domains
 2. Go back to the Manage custom records section and click Create new record again
 3. Enter the following information
-- Host name = [Leave empty]
-- Type = TXT
-- TTL = Leave at default of 3600
-- Data = Paste in the value you just copied from Azure
+    * Host name = [Leave empty]
+    * Type = TXT
+    * TTL = Leave at default of 3600
+    * Data = Paste in the value you just copied from Azure
 4. Save this change
 
 ### Azure Static Web App
@@ -93,9 +97,9 @@ So what we can do instead is to setup domain forwarding so that cgrimes.dev is a
 1. Go back to the DNS options for your site in Google Domains
 2. Expand the Domain forward section and select Manage
 3. Enter the following information
-- Forward to = www.cgrimes.dev
-- From = cgrimes.dev
-- Redirect type = Permanent redirect (301)
-- Path forwarding = forward path
-- SSL = On
+    * Forward to = www.cgrimes.dev
+    * From = cgrimes.dev
+    * Redirect type = Permanent redirect (301)
+    * Path forwarding = forward path
+    * SSL = On
 4. Save these changes
