@@ -66,7 +66,7 @@ Broadly what we are doing here is setting up a CNAME record to map www.cgrimes.d
 
 ## Setup domain forwarding
 
-This is the part where we need to deviate from the docs. Instead of validating the root domain ownership and using ALIAS records we simply use domain forwarding instead, so  that cgrimes.dev is forwarded to www.cgrimes.dev. This is something that people often do anyway when choosing what their default domain is - www vs non-www. In this instance we are going with www as our default and we can set it up so that the paths and SSL are retained. This should lead to a seamless experience and also not negatively impact SEO.
+This is the part where we need to deviate from the docs. Instead of validating the root domain ownership and using ALIAS records we simply use domain forwarding instead, so that cgrimes.dev is forwarded to www.cgrimes.dev. This is something that people often do anyway when choosing what their default domain is - www vs non-www domains. In this instance we are going with www as our default and we can set it up so that the paths and SSL are retained. This should lead to a seamless experience and also not negatively impact SEO.
 
 ### Google Domains
 

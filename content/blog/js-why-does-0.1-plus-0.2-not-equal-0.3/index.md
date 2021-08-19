@@ -170,18 +170,18 @@ encoding - 1023 = exponent
 
 This is the fractional part of the number and is the value that is going to be shifted by the exponent. Essentially, to calculate the correct value you need to imagine that there is a binary point just before the start of the value - so if the mantissa is 10000000 (pretending we are only using 8 bits) then the actual value would be 0.10000000. The below shows some example mantissa encodings but only to 8 bits (in reality there would be 52 bits):
 
-Mantissa encoding = $10000000$
-With implicit binary point = $0.10000000$
-Mantissa value = $2^{-1}$
-= $1/2$
-= $0.5$
+Mantissa encoding = $10000000$  
+With implicit binary point = $0.10000000$  
+Mantissa value = $2^{-1}$  
+= $1/2$  
+= $0.5$  
 
-Mantissa encoding = $11110000$
-With implicit binary point = $0.11110000$
-Mantissa value = $2^{-1} + 2^{-2} + 2^{-3} + 2^{-4}$
-= $1/2 + 1/4 + 1/8 + 1/16$
-= $0.5 + 0.25 + 0.125 + 0.0625$
-= $0.9375$
+Mantissa encoding = $11110000$  
+With implicit binary point = $0.11110000$  
+Mantissa value = $2^{-1} + 2^{-2} + 2^{-3} + 2^{-4}$  
+= $1/2 + 1/4 + 1/8 + 1/16$  
+= $0.5 + 0.25 + 0.125 + 0.0625$  
+= $0.9375$  
 
 #### An Example
 
@@ -199,9 +199,9 @@ $sign * 2^{exponent} * (1 + mantissa)$
 
 We end up with:
 
-x = 1 * $2^{3}$ * (1 + 0.25)
-x = 8 * 1.25
-x = 10
+x = 1 * $2^{3}$ * (1 + 0.25)  
+x = 8 * 1.25  
+x = 10  
 
 For an integer, like 10, this format can perfectly represent the number with no potential errors. In fact all integers within the format range can be perfectly represented, it is when trying to represent decimals that we get imprecision.
 
@@ -221,16 +221,16 @@ Before we can do the calculation, we need to understand exactly how these number
 
 #### 0.1
 
-Sign bit = +1
-Exponent = -4
-Binary Mantissa = 0.1001100110011001100110011001100110011001100110011010
-Decimal Mantissa = 0.60000000000000008882
+Sign bit = +1  
+Exponent = -4  
+Binary Mantissa = 0.1001100110011001100110011001100110011001100110011010  
+Decimal Mantissa = 0.60000000000000008882  
 
 $sign * 2^{exponent} * (1 + mantissa)$
 
-x = +1 * $2^{-4}$ * (1 + 0.60000000000000008882)
-x = 0.0625 * 1.60000000000000008882
-x = 0.1000000000000000055511151231257827021181583404541015625
+x = +1 * $2^{-4}$ * (1 + 0.60000000000000008882)  
+x = 0.0625 * 1.60000000000000008882  
+x = 0.1000000000000000055511151231257827021181583404541015625  
 
 Binary notation:
 
@@ -238,16 +238,16 @@ Binary notation:
 
 #### 0.2
 
-Sign bit = +1
-Exponent = -3
-Binary Mantissa = 1.1001100110011001100110011001100110011001100110011010
-Decimal Mantissa = 1.60000000000000008882
+Sign bit = +1  
+Exponent = -3  
+Binary Mantissa = 1.1001100110011001100110011001100110011001100110011010  
+Decimal Mantissa = 1.60000000000000008882  
 
 $sign * 2^{exponent} * (1 + mantissa)$
 
-x = +1 * $2^{-3}$ * (1 + 0.60000000000000008882)
-x = 0.125 * 1.60000000000000008882
-x = 0.2000000000000000111022302462515654042363166809082031250
+x = +1 * $2^{-3}$ * (1 + 0.60000000000000008882)  
+x = 0.125 * 1.60000000000000008882  
+x = 0.2000000000000000111022302462515654042363166809082031250  
 
 Binary notation:
 
@@ -257,13 +257,13 @@ Binary notation:
 
 Now we have the binary notation for 0.1 and 0.2.
 
-0.1 = 1.1001100110011001100110011001100110011001100110011010 * $2^{-4}$
-0.2 = 1.1001100110011001100110011001100110011001100110011010 * $2^{-3}$
+0.1 = 1.1001100110011001100110011001100110011001100110011010 * $2^{-4}$  
+0.2 = 1.1001100110011001100110011001100110011001100110011010 * $2^{-3}$  
 
 We need to standardise the exponents between these calculations, we do this by converting 0.1 to have an exponent of -3:
 
-0.1 = 0.11001100110011001100110011001100110011001100110011010 * $2^{-3}$
-0.2 = 1.1001100110011001100110011001100110011001100110011010 * $2^{-3}$
+0.1 = 0.11001100110011001100110011001100110011001100110011010 * $2^{-3}$  
+0.2 = 1.1001100110011001100110011001100110011001100110011010 * $2^{-3}$  
 
 Now it is a matter of binary addition:
 
@@ -288,9 +288,9 @@ One important thing to be aware of here is that the mantissa now has 53 bits but
 
 Finally we can convert this into decimal format (the sign bit will still be 1):
 
-0.3 = +1 * $2^{-2}$ * 1.20000000000000017764
-0.3 = 0.25 * 1.20000000000000017764
-0.3 = 0.3000000000000000444089209850062616169452667236328125000
+0.3 = +1 * $2^{-2}$ * 1.20000000000000017764  
+0.3 = 0.25 * 1.20000000000000017764  
+0.3 = 0.3000000000000000444089209850062616169452667236328125000  
 
 And finally we have managed to get to the exact number that JS gives us:
 
